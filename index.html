@@ -127,7 +127,6 @@
     </div>
 
     <script>
-        /* Mevcut LINES içeriği korundu */
         const LINES = [
             [{ t: '#include', c: 'blue' }, { t: ' <iostream>', c: 'lgrey' }],
             [{ t: '#include', c: 'blue' }, { t: ' <string>', c: 'lgrey' }],
@@ -135,7 +134,7 @@
             [{ t: 'int ', c: 'pink' }, { t: 'main', c: 'yellow' }, { t: '() {', c: 'lgrey' }],
             [{ t: '    // Version configuration', c: 'mgrey' }],
             [{ t: '    ' }, { t: 'const ', c: 'pink' }, { t: 'std::string ', c: 'lgrey' },
-            { t: 'version', c: 'lgrey' }, { t: ' = ', c: 'lgrey' }, { t: '"v0.1.0"', c: 'green' }],
+            { t: 'version', c: 'lgrey' }, { t: ' = ', c: 'lgrey' }, { t: '"v0.1.0"', c: 'green' }, { t: ';', c: 'lgrey' }],
             [{ t: '' }],
             [{ t: '    std::cout', c: 'lgrey' }, { t: ' << ', c: 'lgrey' },
             { t: '"================================================="', c: 'green' },
@@ -165,32 +164,11 @@
         const cursorEl = document.createElement('span');
         cursorEl.id = 'cursor';
 
-        let lineIdx = 0;
-        let segIdx = 0;
-        let charIdx = 0;
-        let currentLineEl = null;
-        let currentSegEl = null;
-
-        function delay() {
-            return 18 + Math.random() * 28;
-        }
-
-        function newLine() {
-            const el = document.createElement('div');
-            el.className = 'line';
-            container.appendChild(el);
-            return el;
-        }
-
-        function newSpan(cls) {
-            const el = document.createElement('span');
-            if (cls) el.className = cls;
-            return el;
-        }
+        let lineIdx = 0, segIdx = 0, charIdx = 0, currentLineEl = null, currentSegEl = null;
 
         function tick() {
             if (lineIdx >= LINES.length) {
-                // Döngü için sıfırlama eklendi
+                // Animasyon bittiğinde 3 saniye bekle ve sıfırla
                 setTimeout(() => {
                     container.innerHTML = '';
                     lineIdx = 0; segIdx = 0; charIdx = 0;
@@ -202,22 +180,22 @@
             const segs = LINES[lineIdx];
 
             if (segIdx === 0 && charIdx === 0) {
-                currentLineEl = newLine();
+                currentLineEl = document.createElement('div');
+                currentLineEl.className = 'line';
+                container.appendChild(currentLineEl);
                 currentLineEl.appendChild(cursorEl);
             }
 
             if (segs.length === 1 && segs[0].t === '') {
                 lineIdx++;
-                segIdx = 0;
-                charIdx = 0;
                 setTimeout(tick, 60);
                 return;
             }
 
             const seg = segs[segIdx];
-
             if (charIdx === 0) {
-                currentSegEl = newSpan(seg.c);
+                currentSegEl = document.createElement('span');
+                if (seg.c) currentSegEl.className = seg.c;
                 currentLineEl.insertBefore(currentSegEl, cursorEl);
             }
 
@@ -230,3 +208,13 @@
                 if (segIdx >= segs.length) {
                     lineIdx++;
                     segIdx = 0;
+                }
+            }
+
+            setTimeout(tick, 18 + Math.random() * 25);
+        }
+
+        setTimeout(tick, 600);
+    </script>
+</body>
+</html>
