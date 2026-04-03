@@ -22,28 +22,29 @@
             border-bottom: 1px solid #30363d;
             padding-bottom: 20px;
             margin-bottom: 40px;
+            padding-top: 20px;
         }
 
-        .nav-link {
-            color: #8AB4F8;
-            text-decoration: none;
-            font-size: 14px;
+        .top-nav {
+            margin-bottom: 30px;
+            display: flex;
+            gap: 25px;
         }
 
-            .nav-link:hover {
-                color: #d2e3fc;
-                text-decoration: underline;
+            .top-nav a {
+                color: #8AB4F8;
+                text-decoration: none;
+                font-size: 14px;
             }
 
-        .separator {
-            color: #30363d;
-            margin: 0 10px;
-        }
+                .top-nav a:hover {
+                    color: #81C995;
+                }
 
         h1 {
             color: #81C995;
             font-size: 28px;
-            margin: 15px 0 5px 0;
+            margin: 0;
         }
 
         .status-tag {
@@ -57,14 +58,14 @@
 </head>
 <body>
     <div class="container">
+        <nav class="top-nav">
+            <a href="index.html"><- BACK_TO_TERMINAL</a>
+            <a href="community.html" onclick="window.location.href='mailto:hello@softdivision.net';">CONTACT</a>
+            <a href="community.html">COMMUNITY</a>
+        </nav>
         <div class="header">
-            <nav>
-                <a href="index.html" class="nav-link"><- BACK_TO_TERMINAL</a>
-                <span class="separator">|</span>
-                <a href="mailto:serkan@softdivision.net" class="nav-link">CONTACT_MAIL</a>
-            </nav>
             <h1>Softdivision SIX <span class="status-tag">HQ</span></h1>
-            <p>// Softdivision Interactive eXperience - Authorized access only.</p>
+            <p>// Softdivision Interactive eXperience - Community Hub</p>
         </div>
 
         <script src="https://giscus.app/client.js"
