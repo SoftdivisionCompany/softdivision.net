@@ -53,7 +53,7 @@
             font-family: 'Roboto Mono', monospace;
             font-size: 18px;
             line-height: 30px;
-            letter-spacing: 0.05 em;
+            letter-spacing: 1px;
             font-weight: 400;
         }
 
@@ -178,7 +178,21 @@
         }
 
         function tick() {
-            if (lineIdx >= LINES.length) return; // done
+            if (lineIdx >= LINES.length) {
+                // Kısa bir bekleme sonrası sıfırla ve baştan başla
+                setTimeout(() => {
+                    container.innerHTML = '';
+                    cursorEl.remove();
+                    lineIdx = 0;
+                    segIdx = 0;
+                    charIdx = 0;
+                    currentLineEl = null;
+                    currentSegEl = null;
+                    container.appendChild(cursorEl); // cursor'u geri ekle
+                    tick();
+                }, 2000); // 2 saniye bekle, sonra loop
+                return;
+            }
 
             const segs = LINES[lineIdx];
 
