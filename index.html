@@ -38,7 +38,12 @@
                 color: #FFFFFF;
                 text-decoration: none;
                 text-transform: uppercase;
+                transition: opacity 0.3s ease;
             }
+
+                .top-nav a:hover {
+                    opacity: 0.7;
+                }
 
         #stage {
             position: absolute;
@@ -52,6 +57,7 @@
             font-size: 18px;
             line-height: 30px;
             letter-spacing: 1px;
+            font-weight: 400;
         }
 
         .line {
@@ -60,6 +66,7 @@
             min-height: 30px;
         }
 
+        /* Syntax colors */
         .blue {
             color: #8AB4F8;
         }
@@ -94,6 +101,7 @@
             height: 18px;
             background: #C4C7C5;
             vertical-align: middle;
+            margin-left: 1px;
             animation: blink 1s step-start infinite;
         }
 
@@ -119,6 +127,7 @@
     </div>
 
     <script>
+        // Videodaki akışa birebir uygun satırlar
         const LINES = [
             [{ t: '#include', c: 'blue' }, { t: ' <iostream>', c: 'lgrey' }],
             [{ t: '#include', c: 'blue' }, { t: ' <string>', c: 'lgrey' }],
@@ -127,8 +136,12 @@
             [{ t: '  // Version configuration', c: 'mgrey' }],
             [{ t: '  ' }, { t: 'const ', c: 'pink' }, { t: 'std::string ', c: 'lgrey' }, { t: 'version', c: 'lgrey' }, { t: ' = ', c: 'lgrey' }, { t: '"v0.1.0"', c: 'green' }, { t: ';', c: 'lgrey' }],
             [{ t: '' }],
+            [{ t: '  std::cout', c: 'lgrey' }, { t: ' << ', c: 'lgrey' }, { t: '"================================================="', c: 'green' }, { t: ' << std::endl;', c: 'lgrey' }],
             [{ t: '  std::cout', c: 'lgrey' }, { t: ' << ', c: 'lgrey' }, { t: '"     SOFTDIVISION SIX     "', c: 'green' }, { t: ' << version << std::endl;', c: 'lgrey' }],
+            [{ t: '  std::cout', c: 'lgrey' }, { t: ' << ', c: 'lgrey' }, { t: '"     Company: SOFTDIVISION     "', c: 'green' }, { t: ' << std::endl;', c: 'lgrey' }],
+            [{ t: '  std::cout', c: 'lgrey' }, { t: ' << ', c: 'lgrey' }, { t: '"     Product: SIX (Softdivision Interactive eXperience) "', c: 'green' }, { t: ' << std::endl;', c: 'lgrey' }],
             [{ t: '  std::cout', c: 'lgrey' }, { t: ' << ', c: 'lgrey' }, { t: '"     Status: Initializing Experience... "', c: 'green' }, { t: ' << std::endl;', c: 'lgrey' }],
+            [{ t: '  std::cout', c: 'lgrey' }, { t: ' << ', c: 'lgrey' }, { t: '"================================================="', c: 'green' }, { t: ' << std::endl;', c: 'lgrey' }],
             [{ t: '' }],
             [{ t: '  ' }, { t: 'return ', c: 'pink' }, { t: '0', c: 'orange' }, { t: ';', c: 'lgrey' }],
             [{ t: '}', c: 'lgrey' }],
@@ -138,31 +151,53 @@
         const cursorEl = document.createElement('span');
         cursorEl.id = 'cursor';
 
-        let lineIdx = 0, segIdx = 0, charIdx = 0;
+        let lineIdx = 0, segIdx = 0, charIdx = 0, currentLineEl = null, currentSegEl = null;
 
         function tick() {
             if (lineIdx >= LINES.length) {
-                setTimeout(() => { container.innerHTML = ''; lineIdx = 0; segIdx = 0; charIdx = 0; tick(); }, 2000);
+                setTimeout(() => {
+                    container.innerHTML = '';
+                    lineIdx = 0; segIdx = 0; charIdx = 0;
+                    tick();
+                }, 3000); // İzleyiciye okuması için 3 saniye süre tanı
                 return;
             }
+
             const segs = LINES[lineIdx];
+
             if (segIdx === 0 && charIdx === 0) {
-                const line = document.createElement('div');
-                line.className = 'line';
-                container.appendChild(line);
-                line.appendChild(cursorEl);
+                currentLineEl = document.createElement('div');
+                currentLineEl.className = 'line';
+                container.appendChild(currentLineEl);
+                currentLineEl.appendChild(cursorEl);
             }
-            if (segs.length === 1 && segs[0].t === '') { lineIdx++; setTimeout(tick, 60); return; }
+
+            if (segs.length === 1 && segs[0].t === '') {
+                lineIdx++;
+                setTimeout(tick, 60);
+                return;
+            }
+
             const seg = segs[segIdx];
             if (charIdx === 0) {
-                const span = document.createElement('span');
-                if (seg.c) span.className = seg.c;
-                container.lastChild.insertBefore(span, cursorEl);
+                currentSegEl = document.createElement('span');
+                if (seg.c) currentSegEl.className = seg.c;
+                currentLineEl.insertBefore(currentSegEl, cursorEl);
             }
-            container.lastChild.lastChild.previousSibling.textContent += seg.t[charIdx];
+
+            currentSegEl.textContent += seg.t[charIdx];
             charIdx++;
-            if (charIdx >= seg.t.length) { segIdx++; charIdx = 0; if (segIdx >= segs.length) { lineIdx++; segIdx = 0; } }
-            setTimeout(tick, 25);
+
+            if (charIdx >= seg.t.length) {
+                segIdx++;
+                charIdx = 0;
+                if (segIdx >= segs.length) {
+                    lineIdx++;
+                    segIdx = 0;
+                }
+            }
+
+            setTimeout(tick, 15 + Math.random() * 20); // Videodaki o hızlı akış temposu
         }
         setTimeout(tick, 600);
     </script>
