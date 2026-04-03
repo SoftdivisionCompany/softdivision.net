@@ -3,24 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Softdivision | SIX</title>
-    <meta name="description" content="SOFTDIVISION SIX (Softdivision Interactive eXperience) Next-Generation Digital Content Creation Software">
-    <meta name="keywords" content="3D software, DCC, modeling, animation, rendering, procedural generation, AI workflow, Softdivision SIX, Softdivision Interactive eXperience, Softdivision">
-    <meta name="author" content="SOFTDIVISION">
-
-    <meta property="og:title" content="SOFTDIVISION SIX - Next-Generation Digital Content Creation Software">
-    <meta property="og:description" content="SOFTDIVISION SIX - Next-Generation Digital Content Creation Software">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.softdivision.net">
-    <meta property="og:site_name" content="SOFTDIVISION">
-
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="SOFTDIVISION SIX">
-    <meta name="twitter:description" content="Advanced 3D modeling and rendering platform">
-
-    <meta name="robots" content="index, follow">
-
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after {
@@ -37,30 +20,25 @@
             color: #C4C7C5;
         }
 
-        /* Üst Menü Linkleri (Sol Üstte Yanyana) ✅ */
+        /* Sol Üst Menü Linkleri */
         .top-nav {
             position: fixed;
             top: 30px;
             left: 30px;
-            z-index: 1000; /* Terminalin üstünde kalması için */
+            z-index: 1000;
             display: flex;
-            gap: 25px; /* Linkler arası boşluk */
+            gap: 25px;
         }
 
             .top-nav a {
-                font-family: 'Roboto', sans-serif; /* Düz Roboto ✅ */
+                font-family: 'Roboto', sans-serif;
                 font-weight: 300;
                 font-size: 14px;
                 letter-spacing: 1px;
-                color: #FFFFFF; /* Beyaz ✅ */
+                color: #FFFFFF;
                 text-decoration: none;
                 text-transform: uppercase;
-                transition: opacity 0.3s ease;
             }
-
-                .top-nav a:hover {
-                    opacity: 0.7; /* Üzerine gelince hafif şeffaflık efekti */
-                }
 
         #stage {
             position: absolute;
@@ -71,4 +49,122 @@
 
         #code-block {
             font-family: 'Roboto Mono', monospace;
-            font-size: 18
+            font-size: 18px;
+            line-height: 30px;
+            letter-spacing: 1px;
+        }
+
+        .line {
+            display: block;
+            white-space: pre;
+            min-height: 30px;
+        }
+
+        .blue {
+            color: #8AB4F8;
+        }
+
+        .pink {
+            color: #C58AF9;
+        }
+
+        .yellow {
+            color: #FDD663;
+        }
+
+        .lgrey {
+            color: #C4C7C5;
+        }
+
+        .mgrey {
+            color: #80868B;
+        }
+
+        .green {
+            color: #81C995;
+        }
+
+        .orange {
+            color: #FA903E;
+        }
+
+        #cursor {
+            display: inline-block;
+            width: 2px;
+            height: 18px;
+            background: #C4C7C5;
+            vertical-align: middle;
+            animation: blink 1s step-start infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <a href="mailto:hello@softdivision.net">CONTACT</a>
+        <a href="community.html">COMMUNITY</a>
+    </nav>
+
+    <div id="stage">
+        <div id="code-block"></div>
+    </div>
+
+    <script>
+        const LINES = [
+            [{ t: '#include', c: 'blue' }, { t: ' <iostream>', c: 'lgrey' }],
+            [{ t: '#include', c: 'blue' }, { t: ' <string>', c: 'lgrey' }],
+            [{ t: '' }],
+            [{ t: 'int ', c: 'pink' }, { t: 'main', c: 'yellow' }, { t: '() {', c: 'lgrey' }],
+            [{ t: '  // Version configuration', c: 'mgrey' }],
+            [{ t: '  ' }, { t: 'const ', c: 'pink' }, { t: 'std::string ', c: 'lgrey' }, { t: 'version', c: 'lgrey' }, { t: ' = ', c: 'lgrey' }, { t: '"v0.1.0"', c: 'green' }, { t: ';', c: 'lgrey' }],
+            [{ t: '' }],
+            [{ t: '  std::cout', c: 'lgrey' }, { t: ' << ', c: 'lgrey' }, { t: '"     SOFTDIVISION SIX     "', c: 'green' }, { t: ' << version << std::endl;', c: 'lgrey' }],
+            [{ t: '  std::cout', c: 'lgrey' }, { t: ' << ', c: 'lgrey' }, { t: '"     Status: Initializing Experience... "', c: 'green' }, { t: ' << std::endl;', c: 'lgrey' }],
+            [{ t: '' }],
+            [{ t: '  ' }, { t: 'return ', c: 'pink' }, { t: '0', c: 'orange' }, { t: ';', c: 'lgrey' }],
+            [{ t: '}', c: 'lgrey' }],
+        ];
+
+        const container = document.getElementById('code-block');
+        const cursorEl = document.createElement('span');
+        cursorEl.id = 'cursor';
+
+        let lineIdx = 0, segIdx = 0, charIdx = 0;
+
+        function tick() {
+            if (lineIdx >= LINES.length) {
+                setTimeout(() => { container.innerHTML = ''; lineIdx = 0; segIdx = 0; charIdx = 0; tick(); }, 2000);
+                return;
+            }
+            const segs = LINES[lineIdx];
+            if (segIdx === 0 && charIdx === 0) {
+                const line = document.createElement('div');
+                line.className = 'line';
+                container.appendChild(line);
+                line.appendChild(cursorEl);
+            }
+            if (segs.length === 1 && segs[0].t === '') { lineIdx++; setTimeout(tick, 60); return; }
+            const seg = segs[segIdx];
+            if (charIdx === 0) {
+                const span = document.createElement('span');
+                if (seg.c) span.className = seg.c;
+                container.lastChild.insertBefore(span, cursorEl);
+            }
+            container.lastChild.lastChild.previousSibling.textContent += seg.t[charIdx];
+            charIdx++;
+            if (charIdx >= seg.t.length) { segIdx++; charIdx = 0; if (segIdx >= segs.length) { lineIdx++; segIdx = 0; } }
+            setTimeout(tick, 25);
+        }
+        setTimeout(tick, 600);
+    </script>
+</body>
+</html>
